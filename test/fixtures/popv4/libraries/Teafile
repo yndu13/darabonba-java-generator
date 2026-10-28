@@ -1,0 +1,12 @@
+{
+  "scope": "darabonba",
+  "name": "import",
+  "version": "0.0.1",
+  "main": "./import.dara",
+  "releases": {
+    "java": "com.aliyun:tea-openapi:0.3.6"
+  },
+  "java": {
+    "package": "com.aliyun.teaopenapi"
+  }
+}

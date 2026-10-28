@@ -237,4 +237,31 @@ describe('new Generator', function () {
     await msleep(500);
     assert.deepStrictEqual(fs.readFileSync(clientPath, 'utf8'), expected);
   });
+
+  it('openapi product wires pop gateway', async function () {
+    const outputDir = path.join(__dirname, 'output/popv4');
+    const mainFilePath = path.join(__dirname, 'fixtures/popv4/main.dara');
+    const pkgContent = fs.readFileSync(path.join(__dirname, 'fixtures/popv4/Darafile'), 'utf8');
+    const pkg = JSON.parse(pkgContent);
+    const generator = new Generator({
+      outputDir,
+      baseClient: 'com.aliyun.test.BaseClient',
+      package: 'com.aliyun.test',
+      java: {},
+      pkgDir: path.join(__dirname, 'fixtures/popv4'),
+      productId: 'Ecs',
+      ...pkg
+    });
+    const dsl = fs.readFileSync(mainFilePath, 'utf8');
+    const ast = DSL.parse(dsl, mainFilePath);
+    generator.visit(ast);
+    const client = fs.readFileSync(path.join(outputDir, 'src/main/java/com/aliyun/test/Client.java'), 'utf8');
+    assert.ok(client.includes('this._productId = "Ecs";'));
+    assert.ok(client.includes('this.setGatewayClient(new com.aliyun.gateway.pop.Client());'));
+    assert.ok(client.includes('extends com.aliyun.teaopenapi.Client'));
+    await msleep(500);
+    const pom = fs.readFileSync(path.join(outputDir, 'pom.xml'), 'utf8');
+    assert.ok(pom.includes('<artifactId>alibabacloud-gateway-pop</artifactId>'));
+    assert.ok(pom.includes('<version>0.1.4</version>'));
+  });
 });

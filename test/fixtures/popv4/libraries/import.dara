@@ -1,0 +1,7 @@
+model Config = {}
+model RuntimeObject = {}
+init(config: Config, a: string);
+
+function print(runtime: RuntimeObject): void {
+  return;
+}

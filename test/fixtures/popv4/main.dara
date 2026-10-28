@@ -1,0 +1,9 @@
+import Source;
+extends Source;
+init(config: Source.Config, a: string){
+   super(config, a);
+}
+
+function print(): void {
+  return;
+}
